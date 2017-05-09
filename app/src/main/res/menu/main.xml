@@ -7,5 +7,5 @@
         android:title="Refrescar Nombre" />
     <item
         android:id="@+id/item2"
-        android:title="Refrescar  matricula" />
+        android:title="Refrescar Matricula" />
 </menu>
