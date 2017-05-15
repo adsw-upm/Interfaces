@@ -45,7 +45,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textView"
-        android:entries="@array/asignaturas"/>
+        android:entries="@array/asignaturas"
+        android:spinnerMode="dialog" />
 
     <ListView
         android:id="@+id/itemsListView"
