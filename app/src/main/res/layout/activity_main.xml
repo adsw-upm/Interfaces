@@ -7,12 +7,12 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Inserte texto y pulse boton"
-        android:layout_below="@+id/editText"
+        android:layout_alignEnd="@+id/editText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/editText"
-        android:layout_alignEnd="@+id/editText" />
+        android:layout_below="@+id/editText"
+        android:text="Inserte texto y pulse boton" />
 
     <EditText
         android:id="@+id/editText"
@@ -21,12 +21,12 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/button"
+        android:layout_toStartOf="@+id/button"
         android:ems="10"
         android:hint="Inserte su nombre"
         android:inputType="textPersonName"
-        android:singleLine="false"
-        android:layout_toLeftOf="@+id/button"
-        android:layout_toStartOf="@+id/button" />
+        android:singleLine="false" />
 
     <Button
         android:id="@+id/button"
@@ -48,11 +48,36 @@
         android:entries="@array/asignaturas"
         android:spinnerMode="dialog" />
 
+    <RadioGroup
+        android:id="@+id/radioGroupTurno"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner"
+        android:layout_gravity="fill_horizontal"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioMañana"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Mañana" />
+
+        <RadioButton
+            android:id="@+id/radioTarde"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Tarde" />
+
+    </RadioGroup>
+
     <ListView
         android:id="@+id/itemsListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/spinner" />
+        android:layout_below="@+id/radioGroupTurno" />
 </RelativeLayout>
+

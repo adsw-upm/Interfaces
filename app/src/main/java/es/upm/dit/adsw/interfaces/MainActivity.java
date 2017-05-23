@@ -1,7 +1,9 @@
 package es.upm.dit.adsw.interfaces;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +22,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int MUESTRA_DETALLE = 0;
+    public static final String DETALLE = "Texto";
+
     private ListView listView;
+    private RadioGroup turnoGroup;
+    private List<String> lista;
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,24 +42,44 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        List<String> lista = new ArrayList<>();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, lista);
-        lista.add("Turno mañana");
-        lista.add("Turno tarde");
+        turnoGroup = (RadioGroup) findViewById(R.id.radioGroupTurno);
+
+        lista = new ArrayList<>();
+        adapter = new ArrayAdapter<String>(this, R.layout.row, lista);
+
         listView = (ListView) findViewById(R.id.itemsListView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0){
-                    Toast.makeText(MainActivity.this, "Turno mañana seleccionado", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(MainActivity.this, "Turno tarde seleccionado", Toast.LENGTH_SHORT).show();
-                }
+                Log.i("LISTA", "preremove");
+                lista.remove(position);
+                adapter.notifyDataSetChanged();
+                Log.i("LISTA", "postremove");
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(view.getContext(), DetalleActivity.class);
+                intent.putExtra(DETALLE, lista.get(position));
+                startActivityForResult(intent, MUESTRA_DETALLE);
+                return true;
             }
         });
     }
+
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == RESULT_OK) {
+            Log.i("RESULTADO", "Cerrado por el usuario");
+            Toast.makeText(this, "Cerrado por el usuario.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+    }
+
 
     public void pulsadoBoton (View v){
         EditText editor = (EditText) findViewById(R.id.editText);
@@ -58,7 +87,25 @@ public class MainActivity extends AppCompatActivity {
         Spinner selector = (Spinner) findViewById(R.id.spinner);
         String[] nombres = getResources().getStringArray(R.array.nombres);
         String nombre = nombres[selector.getSelectedItemPosition()];
-        texto.setText(editor.getText() + " matriculado en " + nombre);
+
+        int turnoSeleccionado = turnoGroup.getCheckedRadioButtonId();
+        switch (turnoSeleccionado){
+            case R.id.radioMañana:
+                texto.setText(editor.getText() + " matriculado en " + nombre);
+                Toast.makeText(this, "Matriculado en turno de mañana", Toast.LENGTH_SHORT).show();
+                lista.add(editor.getText() + " matriculado en " + nombre + ".\nTurno de Mañana.");
+                adapter.notifyDataSetChanged();
+                break;
+            case R.id.radioTarde:
+                texto.setText(editor.getText() + " matriculado en " + nombre);
+                Toast.makeText(this, "Matriculado en turno de tarde", Toast.LENGTH_SHORT).show();
+                lista.add(editor.getText() + " matriculado en " + nombre + ".\nTurno de Tarde.");
+                adapter.notifyDataSetChanged();
+                break;
+            default:
+                Toast.makeText(this, "Seleeccione turno de mañana o tarde", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     @Override
